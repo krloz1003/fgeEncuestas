@@ -33,7 +33,16 @@ class EncuestaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {        
+    {
+        $before = \Carbon\Carbon::now()->addDays(1)->format('d/m/Y');
+        $after = \Carbon\Carbon::now()->subYear(150)->format('d/m/Y');
+
+        $rules = [
+            'fecha_registro' => 'required|date_format:d/m/Y|after:'.$after.'|before:'.$before,
+		];
+
+        $request->validate($rules);
+
         $encuesta = new \App\Models\Encuesta;
         $encuesta->fecha_registro               = $request->fecha_registro;
         $encuesta->recepcion_atencion           = $request->recepcion_atencion;

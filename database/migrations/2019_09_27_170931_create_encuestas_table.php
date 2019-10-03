@@ -27,7 +27,7 @@ class CreateEncuestasTable extends Migration
 
             $table->string('servidor_atencion');
             $table->string('servidor_tiempo_atencion');
-            $table->text('observaciones');
+            $table->text('observaciones')->nullable();
 
             $table->timestamps();
         });
