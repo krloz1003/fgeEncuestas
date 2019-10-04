@@ -3,14 +3,14 @@
 @section('content')
 <div class="container">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-8">
             <div class="card">
                 <div class="card-body" id="formulario"></div>
             </div>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-4">
             <div class="card">
-                <div class="card-header">Encuestas</div>
+                <div class="card-header">Encuestas recientes</div>
                 <div class="card-body">
                     <table class="table" id="table"></table>
                 </div>
@@ -50,21 +50,27 @@ $(function(){
             let catServidores       = data1[0];
             let catTiposServidores  = data2[0]
             campos = [
-                {campo:'input',idCampo:'fecha_registro',nameCampo:'Fecha:',typeCampo:'text',valorCampo: '', placeholder:'',newClass:'',divSize:'12',datos: '', defaultOption: false},
-                {campo:'select',idCampo:'recepcion_atencion',nameCampo:'La atención en el área de recepción fue:',typeCampo:'',valorCampo: '', placeholder:'',newClass:'',divSize:'12',datos: opciones, defaultOption: false},
-                {campo:'select',idCampo:'recepcion_tiempo_espera',nameCampo:'El tiempo de espera fue:',typeCampo:'',valorCampo: '', placeholder:'',newClass:'',divSize:'12',datos: opciones, defaultOption: false},
-                {campo:'select',idCampo:'tramite_realizado',nameCampo:'Trámite realizado:',typeCampo:'',valorCampo: '', placeholder:'',newClass:'',divSize:'12',datos: catTramites, defaultOption: false},
-                {campo:'select',idCampo:'id_servidor_publico',nameCampo:'Servidor publico que lo atendió:',typeCampo:'',valorCampo: '', placeholder:'',newClass:'',divSize:'12',datos: catServidores, defaultOption: false},
-                {campo:'select',idCampo:'id_tipo_servidor_publico',nameCampo:'',typeCampo:'',valorCampo: '', placeholder:'',newClass:'',divSize:'12',datos: catTiposServidores, defaultOption: false},
-                {campo:'select',idCampo:'servidor_atencion',nameCampo:'La atención recibida fue:',typeCampo:'',valorCampo: '', placeholder:'',newClass:'',divSize:'12',datos: opciones, defaultOption: false},
-                {campo:'select',idCampo:'servidor_tiempo_atencion',nameCampo:'El tiempo en la atención fue:',typeCampo:'',valorCampo: '', placeholder:'',newClass:'',divSize:'12',datos: opciones, defaultOption: false},
-                {campo:'textarea',idCampo:'observaciones',nameCampo:'Observaciones y/o sugerencias:',typeCampo:'',valorCampo: '', placeholder:'',newClass:'',divSize:'12',datos: '', defaultOption: false},
+                {campo:'input',idCampo:'folio',nameCampo:'Folio:',typeCampo:'text',valorCampo: '', placeholder:'',newClass:'',divSize:'6',datos: '', defaultOption: false},
+                {campo:'input',idCampo:'fecha_registro',nameCampo:'Fecha:',typeCampo:'text',valorCampo: '', placeholder:'',newClass:'',divSize:'6',datos: '', defaultOption: false},
+                {campo:'select',idCampo:'recepcion_atencion',nameCampo:'La atención en el área de recepción fue:',typeCampo:'',valorCampo: '', placeholder:'',newClass:'',divSize:'6',datos: opciones, defaultOption: false},
+                
+                {campo:'select',idCampo:'recepcion_tiempo_espera',nameCampo:'El tiempo de espera fue:',typeCampo:'',valorCampo: '', placeholder:'',newClass:'',divSize:'6',datos: opciones, defaultOption: false},
+                {campo:'select',idCampo:'tramite_realizado',nameCampo:'Trámite realizado:',typeCampo:'',valorCampo: '', placeholder:'',newClass:'',divSize:'6',datos: catTramites, defaultOption: false},
+                
+                {campo:'select',idCampo:'id_servidor_publico',nameCampo:'Servidor publico que lo atendió:',typeCampo:'',valorCampo: '', placeholder:'',newClass:'',divSize:'6',datos: catServidores, defaultOption: false},
+                {campo:'select',idCampo:'id_tipo_servidor_publico',nameCampo:'',typeCampo:'',valorCampo: '', placeholder:'',newClass:'',divSize:'6',datos: catTiposServidores, defaultOption: false},
+                
+                {campo:'select',idCampo:'servidor_atencion',nameCampo:'La atención recibida fue:',typeCampo:'',valorCampo: '', placeholder:'',newClass:'',divSize:'6',datos: opciones, defaultOption: false},
+                {campo:'select',idCampo:'servidor_tiempo_atencion',nameCampo:'El tiempo en la atención fue:',typeCampo:'',valorCampo: '', placeholder:'',newClass:'',divSize:'6',datos: opciones, defaultOption: false},
+                
+                {campo:'textarea',idCampo:'observaciones',nameCampo:'Observaciones y/o sugerencias:',typeCampo:'',valorCampo: '', placeholder:'',newClass:'',divSize:'6',datos: '', defaultOption: false},
             ];
             
             contenedor.append(estilo_modal.mostrar(campos));
             contenedor.append('<button type="button" class="btn btn-primary btn-lg btn-block" id="btnGuardar">Agregar</button>');
+            $('#folio').mask('0000000000');
             $("#fecha_registro").mask("00/00/0000", {placeholder: "DD/MM/AAAA"});
-            $("#fecha_registro").focus();
+            $("#folio").focus();
         })
     }
 
@@ -88,6 +94,7 @@ $(function(){
         //footerModal.append(btnSpiner());
 
         var dataString = {
+            folio: $("#folio").val(),
             fecha_registro: $("#fecha_registro").val(),
             recepcion_atencion: $("#recepcion_atencion").val(),
             recepcion_tiempo_espera: $('#recepcion_tiempo_espera').val(),
@@ -105,11 +112,16 @@ $(function(){
             data: dataString,
             dataType: 'json',
             success: function(data) {
+                toastr.success('Los datos se guardarón correctamente.');
                 table.bootstrapTable('refresh');
                 formulario();
             },
             error: function(data) {
                 var errors = data.responseJSON;
+                console.log(errors);
+                $.each(errors.errors, function(key, value){
+                    toastr.error(value);                    					
+                });                
                 /*messageToastr('error', errors.message);	
                 $('.modal-body div.has-error').removeClass('has-error');
                 $('.help-block').empty();
@@ -129,15 +141,18 @@ $(function(){
     formulario();
     table.bootstrapTable({
         locale: 'es-MX',
-        search: true,
-        pagination: true,
-        pageList: [5, 10, 25, 50],
-        pageSize: 10,
+        //search: true,
+        //pagination: true,
+        //pageList: [5, 10, 25, 50],
+        //pageSize: 10,
         url: routeBase+'/encuesta/get_encuestas',
         columns: [{					
+            field: 'folio',
+            title: 'Folio',
+        }, {					
             field: 'fecha_registro',
             title: 'Fecha registro',
-        }, {					
+        }/*, {					
             field: 'recepcion_atencion',
             title: 'Atención',
         }, {					
@@ -161,7 +176,7 @@ $(function(){
         }, {					
             field: 'observaciones',
             title: 'Observaciones',
-        }]
+        }*/]
     })
 
     

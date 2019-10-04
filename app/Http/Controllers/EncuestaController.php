@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Encuesta;
 
 class EncuestaController extends Controller
 {
@@ -13,7 +14,7 @@ class EncuestaController extends Controller
      */
     public function index()
     {
-        //
+        return view('encuesta.index');
     }
 
     /**
@@ -38,12 +39,14 @@ class EncuestaController extends Controller
         $after = \Carbon\Carbon::now()->subYear(150)->format('d/m/Y');
 
         $rules = [
+            'folio' => 'required|unique:encuestas,folio',
             'fecha_registro' => 'required|date_format:d/m/Y|after:'.$after.'|before:'.$before,
 		];
 
         $request->validate($rules);
 
         $encuesta = new \App\Models\Encuesta;
+        $encuesta->folio                        = $request->folio;
         $encuesta->fecha_registro               = $request->fecha_registro;
         $encuesta->recepcion_atencion           = $request->recepcion_atencion;
         $encuesta->recepcion_tiempo_espera      = $request->recepcion_tiempo_espera;
@@ -103,10 +106,65 @@ class EncuestaController extends Controller
         //
     }
 
+    public function graficas()
+    {
+        return view('encuesta.graficas');
+    }
+
     public function getEncuestas()
     {
-        $encuestas = \App\Models\Encuesta::orderBy('created_at', 'desc')->get();
+        $encuestas = \App\Models\Encuesta::orderBy('created_at', 'desc')
+                                            ->limit(5)
+                                            ->get();
 
         return response()->json($encuestas);
+    }
+
+    public function getAllEncuestas()
+    {
+        $encuestas = \App\Models\Encuesta::orderBy('created_at', 'desc')
+                                            ->get();
+        foreach ($encuestas as $key => $value) {
+            $data[] = array(
+                'folio' => $value->folio,
+                'fecha_registro' => $value->fecha_registro,
+                'recepcion_atencion' => $value->recepcion_atencion,
+                'recepcion_tiempo_espera' => $value->recepcion_tiempo_espera,
+                'tramite_realizado' => $value->tramite_realizado,
+                'servidor_publico' => $value->servidor->nombre,
+                'tipo_servidor_publico' => $value->tipoServidor->nombre,
+                'servidor_atencion' => $value->servidor_atencion,
+                'servidor_tiempo_atencion' => $value->servidor_tiempo_atencion,
+                'observaciones' => $value->observaciones,
+            );
+        }
+
+        return response()->json($data);
+    }
+
+    public function getDataEstadistica(){
+
+        $data = \App\Models\Encuesta::query();
+        
+        
+        $recepcionExcelente[0]   = Encuesta::where('recepcion_atencion', 'EXCELENTE')->count();
+        $recepcionExcelente[1]   = Encuesta::where('recepcion_tiempo_espera', 'EXCELENTE')->count();
+        $recepcionBuena[0]       = Encuesta::where('recepcion_atencion', 'BUENA')->count();
+        $recepcionBuena[1]       = Encuesta::where('recepcion_tiempo_espera', 'BUENA')->count();
+        $recepcionRegular[0]     = Encuesta::where('recepcion_atencion', 'REGULAR')->count();
+        $recepcionRegular[1]     = Encuesta::where('recepcion_tiempo_espera', 'REGULAR')->count();
+        $recepcionMala[0]        = Encuesta::where('recepcion_atencion', 'MALA')->count();
+        $recepcionMala[1]        = Encuesta::where('recepcion_tiempo_espera', 'MALA')->count();                       
+        
+        $data = array(
+            'excelente' => $recepcionExcelente,
+            'buena' => $recepcionBuena,       
+            'regular' => $recepcionRegular,     
+            'mala' => $recepcionMala        
+        );
+        
+        return response()->json($data);
+
+
     }
 }

@@ -41,6 +41,16 @@
                                 <a class="nav-link" href="{{ route('login') }}">{{ __('auth.Login') }}</a>
                             </li>
                         @else
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('home') }}">Nueva encuesta</a>
+                            </li>                        
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('encuesta') }}">Lista de encuestas</a>
+                            </li>                        
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('encuesta/graficas') }}">Gráficas</a>
+                            </li>                                                
+
                             @if (Route::has('register'))
                                 @if(\Auth::user()->name == 'admin' )
                                     <li class="nav-item">
@@ -71,14 +81,16 @@
             </div>
         </nav>
 
-        <main class="py-4">
+        <div class="py-4">
             @yield('content')
-        </main>
+        </div>
     </div>
 </body>
 <script src="{{ asset('js/app.js') }}"></script>
 <script>
     $(function (){
+        routeBase   = '{!! url("") !!}';
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -88,4 +100,4 @@
 
 </script>
 @yield('scripts')
-</html>
+</html>    

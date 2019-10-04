@@ -16,5 +16,11 @@ class UsersTableSeeder extends Seeder
         $servidor->email    = 'admin@admin.com';
         $servidor->password = \Hash::make('password');
         $servidor->save();
+
+        $servidor = new \App\User;
+        $servidor->name     = 'encuesta';
+        $servidor->email    = 'encuesta@encuesta.com';
+        $servidor->password = \Hash::make('123456789');
+        $servidor->save();        
     }
 }

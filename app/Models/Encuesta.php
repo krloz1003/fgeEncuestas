@@ -11,7 +11,7 @@ class Encuesta extends Model
     
     protected $primaryKey = 'id';
     
-    protected $fillable = ['fecha_registro', 'recepcion_atencion', 'recepcion_tiempo_espera', 'tramite_realizado',
+    protected $fillable = ['folio', 'fecha_registro', 'recepcion_atencion', 'recepcion_tiempo_espera', 'tramite_realizado',
     'id_servidor_publico', 'id_tipo_servidor_publico', 'servidor_atencion',
     'servidor_tiempo_atencion','observaciones'
     ];
@@ -25,7 +25,7 @@ class Encuesta extends Model
     {
         return $this->belongsTo('App\Models\CatTipoServidorPublico', 'id_tipo_servidor_publico');
     }
-
+    
     public function setFechaRegistroAttribute($value)
     {
         if(empty($value)){
@@ -33,12 +33,18 @@ class Encuesta extends Model
         } else {
             $this->attributes['fecha_registro'] = Carbon::createFromFormat('d/m/Y', $value)->format('Y-m-d');
         }
-    }
-    
+    }  
+
     public function getFechaRegistroAttribute($value)
     {
     	return \Carbon\Carbon::parse($value)->format('d/m/Y');
-	}
+    }
+    
+    public function getFolioAttribute($value)
+    {
+    	return str_pad($value, 5, "0", STR_PAD_LEFT);
+    }    
+    
 
 
 }
