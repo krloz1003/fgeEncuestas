@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="card">
-            <div class="card-header">Estadistica recepción</div>
+            <div class="card-header">Atención del servidor público</div>
             <div class="card-body">
                 <apexchart type=bar height=350 :options="chartOptions" :series="series" />
             </div>
@@ -38,16 +38,16 @@
                         toolbar: {
                             show: false,
                         }
-                    },
+                    },                    
                     dataLabels: {
                         enabled: true,
                         style: {
                             fontSize: '18px',
                             colors: ["#304758"]
                         }                        
-                    },
+                    },                  
                     stroke: {
-                        show: true,
+                        show: false,
                         width: 2,
                         colors: ['transparent']
                     },
@@ -56,7 +56,7 @@
                         },
                     yaxis: {
                         title: {
-                            text: 'Recepción',
+                            text: 'Servidor público',
                             style: {
                                 color: undefined,
                                 fontSize: '18px',
@@ -79,7 +79,7 @@
         methods: {
             getDatos() {                
                 let le = this;
-                axios.get( this.urlBase+'/data_recepcion' )
+                axios.get( this.urlBase+'/grafica/atencion_servidor_publico' )
                 .then(function (response) {
                     le.series = response.data;
                 })

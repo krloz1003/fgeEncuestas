@@ -21,6 +21,8 @@ window.Vue = require('vue');
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('encuesta-graficas', require('./components/EncuestasGraficas.vue').default);
+Vue.component('documento-graficas', require('./components/DocumentoGrafica.vue').default);
+Vue.component('atencion-servidor', require('./components/AtencionServidor.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

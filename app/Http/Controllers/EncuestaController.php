@@ -142,11 +142,8 @@ class EncuestaController extends Controller
         return response()->json($data);
     }
 
-    public function getDataEstadistica(){
-
-        $data = \App\Models\Encuesta::query();
-        
-        
+    public function getDataEstadistica()
+    {        
         $recepcionExcelente[0]   = Encuesta::where('recepcion_atencion', 'EXCELENTE')->count();
         $recepcionExcelente[1]   = Encuesta::where('recepcion_tiempo_espera', 'EXCELENTE')->count();
         $recepcionBuena[0]       = Encuesta::where('recepcion_atencion', 'BUENA')->count();
@@ -156,15 +153,68 @@ class EncuestaController extends Controller
         $recepcionMala[0]        = Encuesta::where('recepcion_atencion', 'MALA')->count();
         $recepcionMala[1]        = Encuesta::where('recepcion_tiempo_espera', 'MALA')->count();                       
         
-        $data = array(
-            'excelente' => $recepcionExcelente,
-            'buena' => $recepcionBuena,       
-            'regular' => $recepcionRegular,     
-            'mala' => $recepcionMala        
+        $series = array([
+                'name' => 'EXCELENTE',
+                'data' => $recepcionExcelente
+            ], [
+                'name' => 'BUENA',
+                'data' => $recepcionBuena
+            ], [
+                'name' => 'REGULAR',
+                'data' => $recepcionRegular
+            ], [
+                'name' => 'MALA',
+                'data' => $recepcionMala
+            ]
         );
         
-        return response()->json($data);
-
-
+        return response()->json($series);
     }
+
+    public function getEstadisticaDocumentos()
+    {
+        $documentos   = Encuesta::select('tramite_realizado', \DB::raw('count(*) as total'))
+                        ->groupBy('tramite_realizado')
+                        ->get();
+
+        $series['name'] = 'Elaborados';
+        $series['data'] = [];
+        $data = [];
+        foreach ($documentos as $row) {
+            array_push($series['data'], $row->total);
+            //array_push($series['labels'], $row->tramite_realizado);            
+        }
+        array_push($data, $series);
+
+        return response()->json($data);
+    }
+
+    public function getAtencionServidorPublico()
+    {        
+        $servidorExcelente[0]   = Encuesta::where('servidor_atencion', 'EXCELENTE')->count();
+        $servidorExcelente[1]   = Encuesta::where('servidor_tiempo_atencion', 'EXCELENTE')->count();
+        $servidorBuena[0]       = Encuesta::where('servidor_atencion', 'BUENA')->count();
+        $servidorBuena[1]       = Encuesta::where('servidor_tiempo_atencion', 'BUENA')->count();
+        $servidorRegular[0]     = Encuesta::where('servidor_atencion', 'REGULAR')->count();
+        $servidorRegular[1]     = Encuesta::where('servidor_tiempo_atencion', 'REGULAR')->count();
+        $servidorMala[0]        = Encuesta::where('servidor_atencion', 'MALA')->count();
+        $servidorMala[1]        = Encuesta::where('servidor_tiempo_atencion', 'MALA')->count();                       
+        
+        $series = array([
+                'name' => 'EXCELENTE',
+                'data' => $servidorExcelente
+            ], [
+                'name' => 'BUENA',
+                'data' => $servidorBuena
+            ], [
+                'name' => 'REGULAR',
+                'data' => $servidorRegular
+            ], [
+                'name' => 'MALA',
+                'data' => $servidorMala
+            ]
+        );
+        
+        return response()->json($series);
+    }    
 }

@@ -4,7 +4,9 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <encuesta-graficas url="{!! url('data_graficas') !!}"></encuesta-graficas>
+            <encuesta-graficas></encuesta-graficas>
+            <documento-graficas></documento-graficas>
+            <atencion-servidor></atencion-servidor>
         </div>
     </div>
 </div>

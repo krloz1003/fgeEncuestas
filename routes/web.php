@@ -27,5 +27,7 @@ Route::group(['prefix' => 'api/catalogos'], function() {
 Route::get('encuesta/get_encuestas', 'EncuestaController@getEncuestas');
 Route::get('encuesta/get_all_encuestas', 'EncuestaController@getAllEncuestas');
 Route::get('encuesta/graficas', 'EncuestaController@graficas');
-Route::get('data_graficas', 'EncuestaController@getDataEstadistica');
+Route::get('data_recepcion', 'EncuestaController@getDataEstadistica');
+Route::get('data_documentos', 'EncuestaController@getEstadisticaDocumentos');
+Route::get('grafica/atencion_servidor_publico', 'EncuestaController@getAtencionServidorPublico');
 Route::resource('encuesta', 'EncuestaController');

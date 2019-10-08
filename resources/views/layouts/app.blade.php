@@ -86,11 +86,13 @@
         </div>
     </div>
 </body>
+<script>
+    var routeBase   = '{!! url("") !!}';
+</script>
 <script src="{{ asset('js/app.js') }}"></script>
 <script>
+    var routeBase   = '{!! url("") !!}';
     $(function (){
-        routeBase   = '{!! url("") !!}';
-
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

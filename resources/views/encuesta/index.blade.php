@@ -19,7 +19,6 @@
 
 <script>
 $(function(){
-    var routeBase   = '{!! url("") !!}';
     var table       = $('#table');
 
     table.bootstrapTable({
