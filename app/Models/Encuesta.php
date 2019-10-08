@@ -43,6 +43,11 @@ class Encuesta extends Model
     public function getFolioAttribute($value)
     {
     	return str_pad($value, 5, "0", STR_PAD_LEFT);
+    }
+    
+    public function getCreatedAtAttribute($value)
+    {
+    	return \Carbon\Carbon::parse($value)->format('d/m/Y H:m:s');
     }    
     
 

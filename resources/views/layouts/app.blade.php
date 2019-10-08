@@ -46,7 +46,10 @@
                             </li>                        
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url('encuesta') }}">Lista de encuestas</a>
-                            </li>                        
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('comentarios') }}">Comentarios</a>
+                            </li>                                                      
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url('encuesta/graficas') }}">Gráficas</a>
                             </li>                                                

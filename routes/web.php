@@ -31,3 +31,5 @@ Route::get('data_recepcion', 'EncuestaController@getDataEstadistica');
 Route::get('data_documentos', 'EncuestaController@getEstadisticaDocumentos');
 Route::get('grafica/atencion_servidor_publico', 'EncuestaController@getAtencionServidorPublico');
 Route::resource('encuesta', 'EncuestaController');
+Route::get('comentarios', 'ComentarioController@index');
+//Route::get('get_comentarios', 'ComentarioController@getComentarios');
